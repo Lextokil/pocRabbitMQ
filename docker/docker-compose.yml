@@ -1,0 +1,7 @@
+mongo:
+  image: mongo
+  environment:
+    MONGO_INITDB_ROOT_USERNAME: petshop
+    MONGO_INITDB_ROOT_PASSWORD: petshopdb
+  ports:
+    - "27017:27017"
