@@ -1,20 +1,31 @@
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
-import servicetwo.ServiceTwo;
+import core.mdfe.servicetwo.ServiceTwo;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 @Slf4j
 @SpringBootApplication
-@ComponentScan(value = "servicetwo")
+@ComponentScan(basePackages = "core")
+@EnableMongoRepositories(basePackages = "core")
 public class ServicetwoApplication {
 
-	public static void main(String[] args) {
+    private static ServiceTwo serviceTwo;
 
-		SpringApplication.run(ServicetwoApplication.class, args);
-		log.info("ServiceTwo Started! ");
-		ServiceTwo.createConnection();
+    public ServicetwoApplication(ServiceTwo serviceTwo) {
+        this.serviceTwo = serviceTwo;
+    }
 
-	}
+    public static void main(String[] args) throws IOException, TimeoutException {
+        SpringApplication.run(ServicetwoApplication.class, args);
+        log.info("ServiceTwo Started! ");
+        serviceTwo.createConnection();
+
+    }
 
 }
