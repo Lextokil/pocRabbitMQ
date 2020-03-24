@@ -7,22 +7,19 @@ import com.rabbitmq.client.DeliverCallback;
 
 public class ServiceTwo {
 
-    public static final String EXCHANGE_NAME = "xml";
 
-    public static void createConnection(){
+    public static void createConnection() {
         ConnectionFactory connectionFactory = new ConnectionFactory();
         connectionFactory.setHost("localhost");
-        connectionFactory.setUsername("guest");
-        connectionFactory.setPassword("guest");
+        connectionFactory.setUsername("admin");
+        connectionFactory.setPassword("admin");
         try {
             Connection connection = connectionFactory.newConnection();
             Channel channel = connection.createChannel();
-            channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
-            String queueName = channel.queueDeclare().getQueue();
-            channel.queueBind(queueName,EXCHANGE_NAME, "");
+            String queueName = "servicetwo";
             System.out.println("Waiting for messages. to exit press ctrl+c");
 
-//            channel.basicQos(1);
+            channel.basicQos(1);
 
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
                 String message = new String(delivery.getBody(), "UTF-8");

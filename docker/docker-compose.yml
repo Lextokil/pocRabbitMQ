@@ -6,8 +6,13 @@ mongo:
   ports:
     - "27017:27017"
 
-  rabbitmq:
-    image: rabbitmq:management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
+rabbitmq:
+  image: coisa2004/rabbitmq-delay
+  hostname: rabbit
+  environment:
+     - RABBITMQ_DEFAULT_USER=admin
+     - RABBITMQ_DEFAULT_PASS=admin
+  container_name: rabbitmq-delay
+  ports:
+     - "5672:5672"
+     - "15672:15672"
