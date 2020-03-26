@@ -18,10 +18,7 @@ public class ServiceoneApplication {
         SpringApplication.run(ServiceoneApplication.class, args);
         log.info("ServiceOne Started! ");
         Connection connection = ServiceOne.createConnection();
-        for (int i = 0; i < 1000; i++) {
-            Thread.sleep(6000);
-            ServiceOne.postXmlinARow(connection, (i+1));
-        }
+        ServiceOne.postXmlinARow(connection);
     }
 
 }

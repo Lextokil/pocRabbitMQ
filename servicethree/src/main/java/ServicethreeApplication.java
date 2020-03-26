@@ -5,6 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
 @Slf4j
 @SpringBootApplication
 @ComponentScan(basePackages = "core")
@@ -17,7 +20,7 @@ public class ServicethreeApplication {
         this.serviceThree = serviceThree;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, TimeoutException {
 
         SpringApplication.run(ServicethreeApplication.class, args);
         log.info("ServiceThree Started!");

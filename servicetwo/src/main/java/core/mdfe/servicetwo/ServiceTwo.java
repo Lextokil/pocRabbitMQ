@@ -1,17 +1,20 @@
 package core.mdfe.servicetwo;
 
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.DeliverCallback;
-import lombok.extern.slf4j.Slf4j;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import com.rabbitmq.client.*;
+import com.sun.org.apache.xpath.internal.objects.XNull;
 import core.mdfe.Mdfe;
 import core.mdfe.MdfeRepositoryTwo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Null;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeoutException;
 
 @Slf4j
@@ -33,22 +36,38 @@ public class ServiceTwo {
         Connection connection = connectionFactory.newConnection();
         Channel channel = connection.createChannel();
         String queueName = "servicetwo";
-        System.out.println("Waiting for messages. to exit press ctrl+c");
+        String queueRetry = "retry";
+        log.info("Waiting for messages. to exit press ctrl+c");
+
 
         channel.basicQos(1);
-
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             String message = new String(delivery.getBody(), "UTF-8");
-            message += " NÃO ALTERADO";
-            Mdfe mdfe = new Mdfe();
-            mdfe.setChaveAcesso(message);
-            mdfe.setDataProcessamento(LocalDate.now());
-            this.mdfeRepository.save(mdfe);
-            System.out.println("Received in service two'" + message + "'");
+            try {
+                if (ThreadLocalRandom.current().nextInt(0, 10 + 1) == 7) {
+                    log.info("Xml: " + message + " Foi para fila de retry");
+                    throw new RuntimeException("Cabum");
+                }
+                message += " NÃO ALTERADO";
+                Mdfe mdfe = new Mdfe();
+                mdfe.setChaveAcesso(message);
+                mdfe.setDataProcessamento(LocalDate.now());
+                //this.mdfeRepository.save(mdfe);
+                log.info("Received in service two'" + message);
+
+
+            } catch (Exception e) {
+
+                Map<String, Object> headers = new HashMap<>();
+                headers.put("x-delay", 10000);
+                AMQP.BasicProperties.Builder props = new AMQP.BasicProperties.Builder().headers(headers);
+                message += " Retry";
+                channel.basicPublish("retry_exchange_two", "rabbitmq", props.build(), message.getBytes());
+            }
+
+
         };
         channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {
         });
-
     }
-
 }
