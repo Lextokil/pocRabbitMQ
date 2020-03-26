@@ -50,7 +50,7 @@ public class ServiceThree {
                 mdfe.setChaveAcesso(message);
                 mdfe.setDataProcessamento(LocalDate.now());
                 mdfe.setCod(UUID.randomUUID().toString());
-                //this.mdfeServiceThree.save(mdfe);
+                this.mdfeServiceThree.save(mdfe);
                 log.info("Received in service Three'" + message);
             } catch (Exception e) {
                 Map<String, Object> headers = new HashMap<>();

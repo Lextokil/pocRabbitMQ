@@ -52,7 +52,7 @@ public class ServiceTwo {
                 Mdfe mdfe = new Mdfe();
                 mdfe.setChaveAcesso(message);
                 mdfe.setDataProcessamento(LocalDate.now());
-                //this.mdfeRepository.save(mdfe);
+                this.mdfeRepository.save(mdfe);
                 log.info("Received in service two'" + message);
 
 
