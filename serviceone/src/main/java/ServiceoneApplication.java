@@ -13,7 +13,7 @@ import java.util.concurrent.TimeoutException;
 @ComponentScan(value = "serviceone")
 public class ServiceoneApplication {
 
-    public static void main(String[] args) throws IOException, TimeoutException, InterruptedException {
+    public static void main(String[] args) throws IOException, TimeoutException {
 
         SpringApplication.run(ServiceoneApplication.class, args);
         log.info("ServiceOne Started! ");
